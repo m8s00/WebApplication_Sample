@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Odbc;
-using System.Linq;
-using System.Web;
 using System.Web.Configuration;
 using Dapper;
 
