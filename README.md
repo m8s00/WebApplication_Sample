@@ -1,2 +1,2 @@
 # WebApplication_Sample
-Sample
+C# ASP.NET MVC DbAccess Sample
