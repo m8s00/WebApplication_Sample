@@ -11,7 +11,11 @@ namespace WebApplication_Sample.DbAccess
         private OdbcConnection _ocn = null;
         private OdbcTransaction _otn = null;
 
-        public DbAccessor() => _ocn = new OdbcConnection(WebConfigurationManager.ConnectionStrings["OdbcConnectionString"].ConnectionString);
+        public DbAccessor()
+        {
+            _ocn = new OdbcConnection(WebConfigurationManager.ConnectionStrings["OdbcConnectionString"].ConnectionString);
+            Open();
+        }
 
         public void Open()
         {
@@ -38,50 +42,17 @@ namespace WebApplication_Sample.DbAccess
 
         public IEnumerable<T> ExecuteQuery<T>(string sql)
         {
-            Open();
             return _ocn.Query<T>(sql);
         }
 
-        public IEnumerable<T>ExecuteQuery<T>(string sql, object param)
-        {
-            Open();
-            return _ocn.Query<T>(sql, param);
-        }
+        public IEnumerable<T> ExecuteQuery<T>(string sql, object param = null) => _ocn.Query<T>(sql, param, _otn);
 
-        public IEnumerable<dynamic> ExecuteQuery(string sql)
-        {
-            Open();
-            return _ocn.Query(sql);
-        }
+        public IEnumerable<dynamic> ExecuteQuery(string sql, object param = null) => _ocn.Query(sql, param, _otn);
 
-        public IEnumerable<dynamic> ExecuteQuery(string sql, object param)
-        {
-            Open();
-            return _ocn.Query(sql, param);
-        }
+        public object ExecuteScalar(string sql, object param = null) => _ocn.ExecuteScalar(sql, param);
 
-        public object ExecuteScalar(string sql)
+        public int ExecuteNonQuery(string sql, object param = null)
         {
-            Open();
-            return _ocn.ExecuteScalar(sql);
-        }
-
-        public object ExecuteScalar(string sql, object param)
-        {
-            Open();
-            return _ocn.ExecuteScalar(sql, param);
-        }
-
-        public int ExecuteNonQuery(string sql)
-        {
-            Open();
-            if (IsBeginTrans() == false) BeginTransaction();
-            return _ocn.Execute(sql, null, _otn);
-        }
-
-        public int ExecuteNonQuery(string sql, object param)
-        {
-            Open();
             if (IsBeginTrans() == false) BeginTransaction();
             return _ocn.Execute(sql, param, _otn);
         }
